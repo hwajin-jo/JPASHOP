@@ -80,10 +80,8 @@ public class Order {
      */
     //==조회 로직==//
     public int getTotalPrice() {
-        int totalPrice = orderItems.stream()
+        return orderItems.stream()
                 .mapToInt(OrderItem::getTotalPrice)
                 .sum();
-
-        return totalPrice;
     }
 }
