@@ -2,10 +2,10 @@ package jpabook.jpashop.api;
 
 import jpabook.jpashop.domain.Address;
 import jpabook.jpashop.domain.Order;
-import jpabook.jpashop.domain.OrderSearch;
+import jpabook.jpashop.repository.OrderSearch;
 import jpabook.jpashop.domain.OrderStatus;
 import jpabook.jpashop.repository.OrderRepository;
-import jpabook.jpashop.repository.OrderSimpleQueryDto;
+import jpabook.jpashop.repository.order.simplequery.OrderSimpleQueryDto;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,6 +21,7 @@ import java.util.stream.Collectors;
  * Order -> Member
  * Order -> Delivery
  */
+@SuppressWarnings("ResultOfMethodCallIgnored")
 @RestController
 @RequiredArgsConstructor
 public class OrderSimpleApiController {
@@ -44,21 +45,18 @@ public class OrderSimpleApiController {
         // N + 1 -> 1 + N (2) = 1 + 회웤 N + 배송 N
         List<Order> orders = orderRepository.findAll((new OrderSearch()));
 
-        List<SimpleOrderDto> result = orders.stream()
+        return orders.stream()
                 .map(SimpleOrderDto::new)
                 .collect(Collectors.toList());
-
-        return result;
     }
 
     @GetMapping("/api/v3/simple-orders")
     public List<SimpleOrderDto> ordersV3() {
         List<Order> orders = orderRepository.findAllWithMemberDelivery();
-        List<SimpleOrderDto> result = orders.stream()
-                .map(o -> new SimpleOrderDto(o))
-                .collect(Collectors.toList());
 
-        return result;
+        return orders.stream()
+                .map(SimpleOrderDto::new)
+                .collect(Collectors.toList());
     }
 
     @GetMapping("/api/v4/simple-orders")
