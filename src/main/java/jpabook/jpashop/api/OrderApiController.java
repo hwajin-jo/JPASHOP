@@ -10,6 +10,8 @@ import jpabook.jpashop.repository.order.query.OrderFlatDto;
 import jpabook.jpashop.repository.order.query.OrderItemQueryDto;
 import jpabook.jpashop.repository.order.query.OrderQueryDto;
 import jpabook.jpashop.repository.order.query.OrderQueryRepository;
+import jpabook.jpashop.service.query.OrderDto;
+import jpabook.jpashop.service.query.OrderQueryService;
 import lombok.Data;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -29,6 +31,8 @@ public class OrderApiController {
 
     private final OrderRepository orderRepository;
     private final OrderQueryRepository orderQueryRepository;
+
+    private final OrderQueryService orderQueryService;
 
     @GetMapping("/api/v1/orders")
     public List<Order> ordersV1() {
@@ -97,6 +101,11 @@ public class OrderApiController {
                         e.getKey().getName(), e.getKey().getOrderDate(), e.getKey().getOrderStatus(),
                         e.getKey().getAddress(), e.getValue()))
                 .collect(toList());
+    }
+
+    @GetMapping("/api/v7/orders")
+    public List<jpabook.jpashop.service.query.OrderDto> ordersV7() {
+        return orderQueryService.findOrder();
     }
 
     @Data
